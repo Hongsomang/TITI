@@ -1,4 +1,4 @@
-package dsm.titi;
+package dsm.titi.Activity;
 
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+
+import dsm.titi.Activity.MainActivity;
+import dsm.titi.R;
 
 /**
  * Created by ghdth on 2018-04-14.
