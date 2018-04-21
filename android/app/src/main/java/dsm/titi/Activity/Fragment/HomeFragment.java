@@ -50,14 +50,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
        View view=null;
         Log.d("홈","시작");
         if(getArguments().getInt("index",0)==0){
-            return view;
-        }
-        if(getArguments().getInt("index",0)==1){
             view=inflater.inflate(R.layout.fragment_map,container,false);
             mapView=(MapView)view.findViewById(R.id.map);
             mapView.onCreate(savedInstanceState);
             mapView.getMapAsync(this);
+            mapView.onResume();
             //initmap(view);
+            return view;
+        }
+        if(getArguments().getInt("index",0)==1){
+
 
             return view;
         }
@@ -89,7 +91,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        Log.d("dfdf","dfdfds");
     }
 
     @Override
