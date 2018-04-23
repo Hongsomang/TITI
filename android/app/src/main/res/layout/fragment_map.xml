@@ -1,39 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:tools="http://schemas.android.com/tools"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:name="com.google.android.gms.maps.MapFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginBottom="?attr/actionBarSize"
-    android:orientation="vertical"
-    android:id="@+id/fragment_container"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.1"
-            app:contentInsetStart="0dp"
-            android:background="@color/colorPrimary"
-            >
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/app_name"
-                android:textColor="#FFF"/>
-        </android.support.v7.widget.Toolbar>
+    android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.9">
-        <com.google.android.gms.maps.MapView
+            android:layout_height="match_parent"
+            >
+            <TextView
+                android:id="@+id/tt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="hello_map"
+                android:gravity="center"
+                />
+      <!--  <com.google.android.gms.maps.MapView
             android:id="@+id/map"
             android:layout_height="match_parent"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent" />-->
         </LinearLayout>
     </LinearLayout>
-</FrameLayout>

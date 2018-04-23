@@ -1,67 +1,47 @@
 package dsm.titi.Activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;;
 import android.os.Bundle;
 
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager;
-
-import dsm.titi.Activity.Adapter.HomeViewPagerAdapter;
-import dsm.titi.Activity.Fragment.HomeFragment;
+import dsm.titi.Activity.Adapter.TabPagerAdapter;
+import dsm.titi.Activity.Fragment.Fragment_Album;
+import dsm.titi.Activity.Fragment.Fragment_Map;
+import dsm.titi.Activity.Fragment.Fragment_Writing;
 import dsm.titi.R;
 
 public class MainActivity extends AppCompatActivity {
-    AHBottomNavigation bottomNavigation;
-    AHBottomNavigationViewPager viewPager;
-    HomeFragment currentFragment=null;
-    HomeViewPagerAdapter adapter;
+
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initUI();
-        this.createNavItem();
+        viewPager=(ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        tabLayout=(TabLayout)findViewById(R.id.tablayout);
+        tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.map_location);
+        tabLayout.getTabAt(1).setIcon(R.drawable.photo_library);
+        tabLayout.getTabAt(2).setIcon(R.drawable.edit);
+        TabLayout.Tab tab=tabLayout.getTabAt(2);
 
     }
-    private void initUI(){
-        bottomNavigation=(AHBottomNavigation)findViewById(R.id.bottom_navigation);
-        viewPager=(AHBottomNavigationViewPager)findViewById(R.id.view_pager);
-        AHBottomNavigationItem item1=new AHBottomNavigationItem("Map",R.drawable.map_location,R.color.colorPrimary);
-        AHBottomNavigationItem item2=new AHBottomNavigationItem("Album",R.drawable.photo_library,R.color.colorPrimary);
-        AHBottomNavigationItem item3=new AHBottomNavigationItem("writing",R.drawable.edit,R.color.colorPrimary);
-        bottomNavigation.addItem(item1);
-        bottomNavigation.addItem(item2);
-        bottomNavigation.addItem(item3);
-        bottomNavigation.setTranslucentNavigationEnabled(true);
-        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
-                if(currentFragment==null) currentFragment=adapter.getCurrentFragment();
-                if(wasSelected&&currentFragment!=null){
-                    bottomNavigation.refresh();
-                    return true;
-                }
-                if(currentFragment!=null)currentFragment.willBeHidden();
-                viewPager.setCurrentItem(position,false);
-                if(currentFragment==null)return true;
-                currentFragment=adapter.getCurrentFragment();
-                currentFragment.willBeDisplayed();
-                return true;
-            }
-        });
-        viewPager.setOffscreenPageLimit(4);
-        adapter = new HomeViewPagerAdapter(getSupportFragmentManager());
+    private void setupViewPager(ViewPager viewPager){
+        TabPagerAdapter adapter=new TabPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new Fragment_Map(),"map");
+        adapter.addFragment(new Fragment_Album(),"album");
+        adapter.addFragment(new Fragment_Writing(),"writing");
         viewPager.setAdapter(adapter);
-
-        currentFragment = adapter.getCurrentFragment();
     }
-    public void createNavItem(){
-        bottomNavigation.setBehaviorTranslationEnabled(true);
-        bottomNavigation.setTranslucentNavigationEnabled(true);
-        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
-
-        bottomNavigation.setCurrentItem(0);
-    }
-
 }
