@@ -6,20 +6,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-            <TextView
-                android:id="@+id/tt"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="hello_map"
-                android:gravity="center"
-                />
-      <!--  <com.google.android.gms.maps.MapView
-            android:id="@+id/map"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent" />-->
-        </LinearLayout>
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:name="com.google.android.gms.maps.MapFragment"/>
+
     </LinearLayout>

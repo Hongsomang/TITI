@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
     private  ViewPager viewPager;
 
     private  int[] tabIcons={
-            R.drawable.map_location,
-            R.drawable.photo_library,
-            R.drawable.edit
+            R.drawable.map,
+            R.drawable.album,
+            R.drawable.writing
     };
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout=(TabLayout)findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabTextColors(Color.parseColor("#D1D1D1"),Color.parseColor("#2db07f"));
-        
+
         setupTabIcons();
 
     }
