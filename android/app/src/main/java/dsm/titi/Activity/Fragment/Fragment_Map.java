@@ -100,7 +100,9 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback{
 
         googleMap.addMarker(markerOptions);
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL))
+
+        ;
 
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TITI</string>
+    <string name="save" translatable="false">사진&amp;글 추가</string>
 </resources>
