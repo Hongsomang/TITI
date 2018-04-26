@@ -1,7 +1,9 @@
 package dsm.titi.Activity.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import dsm.titi.Activity.Save_Activity;
 import dsm.titi.R;
 
 /**
@@ -22,7 +25,7 @@ import dsm.titi.R;
 
 public class Fragment_Map extends Fragment implements OnMapReadyCallback{
     private MapView mapView = null;
-
+    private FloatingActionButton save_click;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,9 +38,17 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-         View layout=inflater.inflate(R.layout.fragment_map,container,false);
+         final View layout=inflater.inflate(R.layout.fragment_map,container,false);
          mapView=(MapView)layout.findViewById(R.id.map);
          mapView.getMapAsync(this);
+         save_click=(FloatingActionButton)layout.findViewById(R.id.save_click);
+         save_click.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 Intent intent=new Intent(getActivity(), Save_Activity.class);
+                 startActivity(intent);
+             }
+         });
         return layout;
 
     }
