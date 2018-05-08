@@ -1,7 +1,15 @@
 package dsm.titi.Activity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,10 +18,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+
+import com.gun0912.tedpicker.ImagePickerActivity;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import dsm.titi.Activity.Adapter.Adapter_save;
 import dsm.titi.Activity.Item.Item_save;
+import dsm.titi.Manifest;
 import dsm.titi.R;
 
 /**
@@ -28,6 +41,12 @@ public class Save_Activity extends AppCompatActivity {
     private Button save_btn;
     private ImageView back_btn,puls_btn;
     private EditText title_et,content_et,address_et;
+    final int REQ_CODE_SELECT_IMAGE=100;
+
+
+
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +89,20 @@ public class Save_Activity extends AppCompatActivity {
         puls_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Image();
+                if(Build.VERSION.SDK_INT > 22){
+                    int permissionCheck = ContextCompat.checkSelfPermission(Save_Activity.this, android.Manifest.permission.CAMERA)
+                            | ContextCompat.checkSelfPermission(Save_Activity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(Save_Activity.this,
+                                new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA},
+                                REQ_CODE_SELECT_IMAGE);
+                    }else{
+                        Image();
+                    }
+                }else{
+                    Image();
+                }
+
             }
         });
 
@@ -84,8 +116,37 @@ public class Save_Activity extends AppCompatActivity {
 
     }
     public void Image(){
+        Intent intent = new Intent(this,ImagePickerActivity.class);
+        startActivityForResult(intent,REQ_CODE_SELECT_IMAGE);
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQ_CODE_SELECT_IMAGE:
+                if(requestCode== Activity.RESULT_OK){
+                    mItem.add(new Item_save(D));
+                }
 
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case REQ_CODE_SELECT_IMAGE:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Image();
+                }else{
+                    finish();
+                }
+                break;
+            default:
+                break;
+
+
+        }
+    }
 }
