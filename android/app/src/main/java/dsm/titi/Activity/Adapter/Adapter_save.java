@@ -3,14 +3,19 @@ package dsm.titi.Activity.Adapter;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import dsm.titi.Activity.Item.Item_Save_Image;
 import dsm.titi.Activity.Item.Item_save;
 import dsm.titi.R;
 
@@ -20,11 +25,12 @@ import dsm.titi.R;
 
 public class Adapter_save extends RecyclerView.Adapter<Adapter_save.ViewHolder> {
     LayoutInflater layoutInflater;
-    private ArrayList<Item_save> mItem;
+    private ArrayList<Item_Save_Image> mItem;
     private Context context;
-    public Adapter_save(ArrayList<Item_save> mItem,Context context){
+    private RequestManager requestManager;
+    public Adapter_save(ArrayList<Item_Save_Image> mItem,RequestManager requestManager){
         this.mItem=mItem;
-        this.context=context;
+        this.requestManager=requestManager;
     }
 
     @Override
@@ -36,12 +42,18 @@ public class Adapter_save extends RecyclerView.Adapter<Adapter_save.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-     holder.imageView.setImageResource(mItem.get(position).getImage());
+        holder.imageView.setImageDrawable(null);
+
+        requestManager.load(mItem.get(position).getImage()).into(holder.imageView);
+        Log.d("어뎁터","ㅇㄹㅇㄹ");
+        Log.d("어뎁터",mItem.get(position).getImage().toString());
     }
 
 
     @Override
     public int getItemCount() {
+        Log.d("ArrayListItemSize",String.valueOf(mItem.size()));
+
         return mItem.size();
     }
 

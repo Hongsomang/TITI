@@ -3,6 +3,7 @@ package dsm.titi.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,21 +14,26 @@ import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 
+import com.bumptech.glide.Glide;
 import com.gun0912.tedpicker.ImagePickerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import dsm.titi.Activity.Adapter.Adapter_save;
+import dsm.titi.Activity.Item.Item_Save_Image;
 import dsm.titi.Activity.Item.Item_save;
 import dsm.titi.Manifest;
 import dsm.titi.R;
+
+import static com.gun0912.tedpicker.ImagePickerActivity.EXTRA_IMAGE_URIS;
 
 /**
  * Created by ghdth on 2018-04-26.
@@ -37,11 +43,13 @@ public class Save_Activity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter madapter;
     private LinearLayoutManager linearLayoutManager;
-    private ArrayList<Item_save> mItem;
+    private ArrayList<Item_Save_Image> mItem=new ArrayList<>();
+    ;
     private Button save_btn;
     private ImageView back_btn,puls_btn;
     private EditText title_et,content_et,address_et;
     final int REQ_CODE_SELECT_IMAGE=100;
+    private ArrayList<Uri> image_item=new ArrayList<Uri>();
 
 
 
@@ -64,13 +72,11 @@ public class Save_Activity extends AppCompatActivity {
         linearLayoutManager=new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        mItem=new ArrayList<>();
-        madapter=new Adapter_save(mItem,getApplicationContext());
-        recyclerView.setAdapter(madapter);
-        mItem.add(new Item_save(R.drawable.splash_background));
+
+       /* mItem.add(new Item_save(R.drawable.splash_background));
         mItem.add(new Item_save(R.drawable.test));
         mItem.add(new Item_save(R.drawable.test2));
-        mItem.add(new Item_save(R.drawable.test3));
+        mItem.add(new Item_save(R.drawable.test3));*/
 
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +123,9 @@ public class Save_Activity extends AppCompatActivity {
     }
     public void Image(){
         Intent intent = new Intent(this,ImagePickerActivity.class);
+        if(image_item!=null){
+            intent.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS,image_item);
+        }
         startActivityForResult(intent,REQ_CODE_SELECT_IMAGE);
 
     }
@@ -124,13 +133,34 @@ public class Save_Activity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case REQ_CODE_SELECT_IMAGE:
-                if(requestCode== Activity.RESULT_OK){
-                    mItem.add(new Item_save(D));
-                }
 
+        if(resultCode== Activity.RESULT_OK){
+            if(requestCode==REQ_CODE_SELECT_IMAGE){
+                image_item=data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
+                if(image_item!=null){
+                    mItem.clear();
+                    for(int i=0;i<image_item.size();i++){
+                        Log.d("사진",image_item.get(i).toString());
+                        mItem.add(new Item_Save_Image(image_item.get(i)));
+
+                        //ImageView imgView = (ImageView) recyclerView.getChildAt(i).findViewById(R.id.save_iv);
+                       // Glide.with(this).load(image_item.get(i)).into(imgView);
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            madapter=new Adapter_save(mItem,getApplicationContext());
+                            recyclerView.setAdapter(madapter);
+                            madapter.notifyDataSetChanged();
+
+                        }
+                    });
+
+                }
+            }
         }
+
+
     }
 
     @Override

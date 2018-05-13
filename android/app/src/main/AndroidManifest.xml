@@ -24,7 +24,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA59VkmaDhKofLJN39JHdao2xtoaXr2y5o"/>
-        <activity android:name=".Activity.MainActivity">
+        <activity android:name=".Activity.MainActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            >
 
         </activity>
         <activity android:name=".Activity.Splash_Activity">
