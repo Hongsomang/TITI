@@ -22,6 +22,7 @@ import android.widget.ImageView;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.gun0912.tedpicker.ImagePickerActivity;
 
 import java.util.ArrayList;
@@ -40,11 +41,13 @@ import static com.gun0912.tedpicker.ImagePickerActivity.EXTRA_IMAGE_URIS;
  */
 
 public class Save_Activity extends AppCompatActivity {
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView;		
     private RecyclerView.Adapter madapter;
     private LinearLayoutManager linearLayoutManager;
     private ArrayList<Item_Save_Image> mItem=new ArrayList<>();
-    ;
+    public RequestManager mGlideRequestManager;
+
+
     private Button save_btn;
     private ImageView back_btn,puls_btn;
     private EditText title_et,content_et,address_et;
@@ -149,7 +152,7 @@ public class Save_Activity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            madapter=new Adapter_save(mItem,getApplicationContext());
+                            madapter=new Adapter_save(mItem,mGlideRequestManager);
                             recyclerView.setAdapter(madapter);
                             madapter.notifyDataSetChanged();
 
