@@ -26,7 +26,6 @@ public class Fragment_Album extends Fragment{
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
-    private Adapter_Album adapter_album;
     private Item_Album item_album;
     @Nullable
     @Override
@@ -45,7 +44,6 @@ public class Fragment_Album extends Fragment{
         mItem.add(new Item_Album(R.drawable.test3,"부산"));
         mItem.add(new Item_Album(R.drawable.test,"서울"));
         mItem.add(new Item_Album(R.drawable.test2,"대전"));
-        adapter_album=new Adapter_Album(getContext(),mItem);
 
         return layout;
 

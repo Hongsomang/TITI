@@ -28,9 +28,7 @@ import dsm.titi.R;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
-    private Adapter_Writing adapter_writing;
     private Item_writing item_writing;
-    private LinearLayoutManager linearLayoutManager;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -39,7 +37,7 @@ import dsm.titi.R;
         recyclerView.hasFixedSize();
 
         layoutManager=new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setLayoutManager(layoutManager);
 
         mItem=new ArrayList<>();
         adapter=new Adapter_Writing(getContext(),mItem);
@@ -50,7 +48,6 @@ import dsm.titi.R;
         mItem.add(new Item_writing("부산","ㅇㄹㅇㄹㅇㄹㅇㄹㅇㄹㅇㅇㄹ","ㅇㄹㅇㄹㅇㄹㅇㄹ","ㅇㄹㅇㄹ"));
         mItem.add(new Item_writing("부산","ㅇㄹㅇㄹㅇㄹㅇㄹㅇㄹㅇㅇㄹ","ㅇㄹㅇㄹㅇㄹㅇㄹ","ㅇㄹㅇㄹ"));
 
-        adapter_writing=new Adapter_Writing(getContext(),mItem);
 
         return layout;
     }

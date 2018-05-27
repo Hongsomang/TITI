@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,20 +20,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.gun0912.tedpicker.ImagePickerActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import dsm.titi.Activity.Adapter.Adapter_save;
+import dsm.titi.Activity.DB.DB;
+import dsm.titi.Activity.DB.DB_Save;
+import dsm.titi.Activity.DB.DB_Save_Image;
 import dsm.titi.Activity.Item.Item_Save_Image;
 import dsm.titi.Activity.Item.Item_save;
 import dsm.titi.Manifest;
 import dsm.titi.R;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 import static com.gun0912.tedpicker.ImagePickerActivity.EXTRA_IMAGE_URIS;
 
@@ -47,14 +56,19 @@ public class Save_Activity extends AppCompatActivity {
     private ArrayList<Item_Save_Image> mItem=new ArrayList<>();
     public RequestManager mGlideRequestManager;
 
-
+    private String TAG="Save_Activity";
     private Button save_btn;
     private ImageView back_btn,puls_btn;
     private EditText title_et,content_et,address_et;
     final int REQ_CODE_SELECT_IMAGE=100;
     private ArrayList<Uri> image_item=new ArrayList<Uri>();
 
+    private DB db=new DB();
+    private Realm mRealm;
 
+    long mNow;
+    Date mDate;
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
 
@@ -76,14 +90,16 @@ public class Save_Activity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        madapter=new Adapter_save(mItem,getApplicationContext());
+        recyclerView.setAdapter(madapter);
        /* mItem.add(new Item_save(R.drawable.splash_background));
         mItem.add(new Item_save(R.drawable.test));
         mItem.add(new Item_save(R.drawable.test2));
         mItem.add(new Item_save(R.drawable.test3));*/
-
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Realm.init(Save_Activity.this);
                 save();
             }
         });
@@ -121,8 +137,30 @@ public class Save_Activity extends AppCompatActivity {
         String title=title_et.getText().toString();
         String content=content_et.getText().toString();
         String address=address_et.getText().toString();
+        if(title.equals("")||content.equals("")||address.equals("")){
+            Toast.makeText(getApplicationContext(),"모두 입력해 주세요.",Toast.LENGTH_LONG).show();
+        }else {
+           // db.Realm();
+            Realm();
+            DB_Save db_save=mRealm.createObject(DB_Save.class);
+            db_save.setTitle(title);
+            db_save.setContent(content);
+            db_save.setAddress(address);
+            db_save.setDate(getTime());
+
+            Log.d(TAG,String.valueOf(mItem.size()));
+            for(int i=0;i<mItem.size();i++){
+                DB_Save_Image db_save_image=mRealm.createObject(DB_Save_Image.class);
+                db_save_image.setTitle(title);
+                db_save_image.setImage(mItem.get(i).getImage());
+            }
+            mRealm.commitTransaction();
+            finish();
+        }
 
 
+
+        Toast.makeText(getApplicationContext(),"저장",Toast.LENGTH_LONG).show();
     }
     public void Image(){
         Intent intent = new Intent(this,ImagePickerActivity.class);
@@ -139,26 +177,17 @@ public class Save_Activity extends AppCompatActivity {
 
         if(resultCode== Activity.RESULT_OK){
             if(requestCode==REQ_CODE_SELECT_IMAGE){
+                mItem.clear();
                 image_item=data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
                 if(image_item!=null){
-                    mItem.clear();
                     for(int i=0;i<image_item.size();i++){
                         Log.d("사진",image_item.get(i).toString());
-                        mItem.add(new Item_Save_Image(image_item.get(i)));
+                        mItem.add(new Item_Save_Image(image_item.get(i).toString()));
+                        madapter.notifyDataSetChanged();
 
                         //ImageView imgView = (ImageView) recyclerView.getChildAt(i).findViewById(R.id.save_iv);
                        // Glide.with(this).load(image_item.get(i)).into(imgView);
                     }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            madapter=new Adapter_save(mItem,mGlideRequestManager);
-                            recyclerView.setAdapter(madapter);
-                            madapter.notifyDataSetChanged();
-
-                        }
-                    });
-
                 }
             }
         }
@@ -182,4 +211,24 @@ public class Save_Activity extends AppCompatActivity {
 
         }
     }
+    public void Realm(){
+        try {
+            mRealm= Realm.getDefaultInstance();
+
+        }catch (Exception e){
+            RealmConfiguration config=new RealmConfiguration.Builder()
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
+            mRealm=Realm.getInstance(config);
+        }
+        mRealm.beginTransaction();
+    }
+    public String getTime(){
+        mNow = System.currentTimeMillis();
+        mDate = new Date(mNow);
+        return mFormat.format(mDate);
+
+
+    }
+
 }

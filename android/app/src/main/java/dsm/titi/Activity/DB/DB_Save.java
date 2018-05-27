@@ -7,19 +7,10 @@ import io.realm.RealmObject;
  */
 
 public class DB_Save extends RealmObject {
-    private int image;
     private String title;
     private String content;
     private String address;
-
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
-    }
-
+    private String date;
     public String getTitle() {
         return title;
     }
@@ -42,5 +33,13 @@ public class DB_Save extends RealmObject {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

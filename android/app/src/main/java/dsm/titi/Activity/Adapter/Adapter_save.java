@@ -28,9 +28,9 @@ public class Adapter_save extends RecyclerView.Adapter<Adapter_save.ViewHolder> 
     private ArrayList<Item_Save_Image> mItem;
     private Context context;
     private RequestManager requestManager;
-    public Adapter_save(ArrayList<Item_Save_Image> mItem,RequestManager requestManager){
+    public Adapter_save(ArrayList<Item_Save_Image> mItem, Context context){
         this.mItem=mItem;
-        this.requestManager=requestManager;
+        this.context=context;
     }
 
     @Override
@@ -42,11 +42,9 @@ public class Adapter_save extends RecyclerView.Adapter<Adapter_save.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.imageView.setImageDrawable(null);
-
-        requestManager.load(mItem.get(position).getImage()).into(holder.imageView);
+        Glide.with(context).load(mItem.get(position).getImage()).into(holder.imageView);
         Log.d("어뎁터","ㅇㄹㅇㄹ");
-        Log.d("어뎁터",mItem.get(position).getImage().toString());
+        Log.d("어뎁터",mItem.get(position).getImage());
     }
 
 
