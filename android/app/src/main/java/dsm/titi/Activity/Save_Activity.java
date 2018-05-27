@@ -212,6 +212,7 @@ public class Save_Activity extends AppCompatActivity {
         }
     }
     public void Realm(){
+
         try {
             mRealm= Realm.getDefaultInstance();
 
@@ -223,6 +224,7 @@ public class Save_Activity extends AppCompatActivity {
         }
         mRealm.beginTransaction();
     }
+
     public String getTime(){
         mNow = System.currentTimeMillis();
         mDate = new Date(mNow);

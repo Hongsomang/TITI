@@ -9,7 +9,9 @@ import io.realm.RealmConfiguration;
 
 public class DB {
     Realm mRealm;
+
     public void Realm(){
+
         try {
             mRealm= Realm.getDefaultInstance();
 

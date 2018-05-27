@@ -5,18 +5,18 @@ package dsm.titi.Activity.Item;
  */
 
 public class Item_Album {
-    private int Image;
+    private String Image;
     private String title;
-    public Item_Album(int Image,String title){
+    public Item_Album(String Image,String title){
         this.Image=Image;
         this.title=title;
     }
 
-    public int getImage() {
+    public String getImage() {
         return Image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         Image = image;
     }
 
