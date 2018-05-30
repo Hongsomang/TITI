@@ -3,14 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="5dp">
-
+    android:gravity="center">
     <ImageView
-        android:id="@+id/images_iv"
+        android:id="@+id/item_image_iv"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:cropToPadding="false"
         android:scaleType="centerCrop"
-        android:layout_marginLeft="10dp"
-        android:layout_gravity="center_vertical"/>
+        />
 </LinearLayout>

@@ -153,6 +153,7 @@ public class Save_Activity extends AppCompatActivity {
                 DB_Save_Image db_save_image=mRealm.createObject(DB_Save_Image.class);
                 db_save_image.setTitle(title);
                 db_save_image.setImage(mItem.get(i).getImage());
+                db_save_image.setAddress(address);
             }
             mRealm.commitTransaction();
             finish();

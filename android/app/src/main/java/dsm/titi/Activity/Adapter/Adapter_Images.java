@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import dsm.titi.Activity.Item.Item_Images;
+import dsm.titi.Activity.Item.Item_Save_Image;
 import dsm.titi.R;
 
 /**
@@ -21,8 +24,8 @@ import dsm.titi.R;
 public class Adapter_Images extends RecyclerView.Adapter<Adapter_Images.ViewHolder> {
 
     private Context context;
-    private ArrayList<Item_Images> item_images;
-    public Adapter_Images(Context context, ArrayList<Item_Images> item_images){
+    private ArrayList<Item_Save_Image> item_images;
+    public Adapter_Images(Context context, ArrayList<Item_Save_Image> item_images){
         this.context=context;
         this.item_images=item_images;
     }
@@ -36,8 +39,7 @@ public class Adapter_Images extends RecyclerView.Adapter<Adapter_Images.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.image.setImageResource(item_images.get(position).getImages());
-
+        Glide.with(context).load(item_images.get(position).getImage()).into(holder.image);
     }
 
 

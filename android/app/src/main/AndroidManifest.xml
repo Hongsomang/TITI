@@ -40,6 +40,7 @@
         <activity android:name="com.gun0912.tedpicker.ImagePickerActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".Activity.ImagesAcitivity"/>
     </application>
 
 </manifest>

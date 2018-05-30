@@ -9,6 +9,15 @@ import io.realm.RealmObject;
 public class DB_Save_Image extends RealmObject {
     private String title;
     private String image;
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getTitle() {
         return title;
