@@ -7,12 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import dsm.titi.Activity.Adapter.Adapter_ImageView;
 import dsm.titi.Activity.Adapter.Adapter_Images;
 import dsm.titi.Activity.Adapter.Adapter_save;
 import dsm.titi.Activity.DB.DB_Save;
@@ -66,6 +70,42 @@ public class ImagesAcitivity extends AppCompatActivity {
             }
         }
         mAdapter.notifyDataSetChanged();
+
+
+        final GestureDetector gestureDetector = new GestureDetector(getApplicationContext(),new GestureDetector.SimpleOnGestureListener()
+        {
+            @Override
+            public boolean onSingleTapUp(MotionEvent e)
+            {
+                return true;
+            }
+        });
+
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                View view=rv.findChildViewUnder(e.getX(),e.getY());
+                if(view!=null&&gestureDetector.onTouchEvent(e)) {
+                    Toast.makeText(getApplicationContext(),String.valueOf(rv.getChildAdapterPosition(view)),Toast.LENGTH_LONG).show();
+                    Intent intent=new Intent(getApplicationContext(), ImageViewActivity.class);
+                    intent.putExtra("position",rv.getChildAdapterPosition(view));
+                    intent.putExtra("address",address);
+                    startActivity(intent);
+
+                }
+                    return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
 
     }
     public void Realm(){
