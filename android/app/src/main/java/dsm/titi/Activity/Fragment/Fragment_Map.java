@@ -1,10 +1,13 @@
 package dsm.titi.Activity.Fragment;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +19,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+
+import dsm.titi.Activity.DB.DB_Save;
 import dsm.titi.Activity.Save_Activity;
 import dsm.titi.R;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 /**
  * Created by ghdth on 2018-04-23.
@@ -26,7 +36,9 @@ import dsm.titi.R;
 public class Fragment_Map extends Fragment implements OnMapReadyCallback{
     private MapView mapView = null;
     private FloatingActionButton save_click;
-
+    private GoogleMap mMap;
+    private Geocoder geocoder;
+    private Realm mRealm;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,25 +111,75 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback{
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        LatLng SEOUL = new LatLng(37.56, 126.97);
+//        LatLng SEOUL = new LatLng(37.56, 126.97);
+//
+//        MarkerOptions markerOptions = new MarkerOptions();
+//
+//        markerOptions.position(SEOUL);
+//
+//        markerOptions.title("서울");
+//
+//        markerOptions.snippet("수도");
+//
+//        googleMap.addMarker(markerOptions);
+//
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL))
+//
+//        ;
+//
+//        googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
-        MarkerOptions markerOptions = new MarkerOptions();
 
-        markerOptions.position(SEOUL);
+        mMap=googleMap;
+        geocoder=new Geocoder(getContext());
 
-        markerOptions.title("서울");
+        Realm();
+        RealmResults<DB_Save> results=mRealm.where(DB_Save.class).findAll();
+        if(results.size()!=0){
+            for(int i=0;i<results.size();i++){
+                DB_Save db_save=results.get(i);
+                String Adress=db_save.getAddress();
+                List<Address>addressList=null;
 
-        markerOptions.snippet("수도");
+                try {
+                    addressList=geocoder.getFromLocationName(Adress,1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.d("addressList.get",addressList.get(0).toString());
+                String []splitStr=addressList.get(0).toString().split(",");
+                String address_maker=splitStr[0].substring(splitStr[0].indexOf("\"") + 1,splitStr[0].length() - 2);
+                Log.d("address",address_maker);
+                String latitude=splitStr[10].substring(splitStr[10].indexOf("=") + 1);
+                String longitude=splitStr[12].substring(splitStr[12].indexOf("=") + 1);
+                Log.d("latitude",latitude);
+                Log.d("longitude",longitude);
+                LatLng point=new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude));
+                MarkerOptions mOption=new MarkerOptions();
+                mOption.title(db_save.getTitle());
+                mOption.snippet(address_maker);
+                mOption.position(point);
+                mMap.addMarker(mOption);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point,15));
+            }
+        }
 
-        googleMap.addMarker(markerOptions);
-
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL))
-
-        ;
-
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
 
+
+
+    }
+    public void Realm(){
+
+        try {
+            mRealm= Realm.getDefaultInstance();
+
+        }catch (Exception e){
+            RealmConfiguration config=new RealmConfiguration.Builder()
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
+            mRealm=Realm.getInstance(config);
+        }
 
     }
 }

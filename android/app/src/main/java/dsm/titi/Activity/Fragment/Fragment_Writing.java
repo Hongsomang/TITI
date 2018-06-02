@@ -63,6 +63,7 @@ import io.realm.RealmResults;
             mItem.clear();
             for(int i=0;i<results.size();i++){
                 DB_Save db_save=results.get(i);
+                Log.d("Fragment_Wrting",db_save.toString());
                 mItem.add(new Item_writing(db_save.getTitle(),db_save.getAddress(),db_save.getContent(),db_save.getDate()));
             }
             adapter.notifyDataSetChanged();
