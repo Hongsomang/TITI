@@ -130,11 +130,15 @@ public class Save_Activity extends AppCompatActivity {
                 if(Build.VERSION.SDK_INT > 22){
                     int permissionCheck = ContextCompat.checkSelfPermission(Save_Activity.this, android.Manifest.permission.CAMERA)
                             | ContextCompat.checkSelfPermission(Save_Activity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+
                     if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(Save_Activity.this,
                                 new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA},
                                 REQ_CODE_SELECT_IMAGE);
-                    }else{
+                    }
+
+                    else{
                         Image();
                     }
                 }else{

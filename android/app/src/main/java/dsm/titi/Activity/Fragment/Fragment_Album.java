@@ -56,7 +56,7 @@ public class Fragment_Album extends Fragment{
         mItem=new ArrayList<>();
         adapter=new Adapter_Album(getContext(),mItem);
         recyclerView.setAdapter(adapter);
-
+        swipeRefreshLayout=(SwipeRefreshLayout)layout.findViewById(R.id.swipeRefreshLayout_album);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
