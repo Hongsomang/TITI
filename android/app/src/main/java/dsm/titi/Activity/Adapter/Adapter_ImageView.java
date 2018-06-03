@@ -42,7 +42,8 @@ public class Adapter_ImageView extends PagerAdapter  {
     }
     public void images(){
         Realm();
-        RealmResults<DB_Save_Image> results=mRealm.where(DB_Save_Image.class).equalTo("address",address).findAll();
+        RealmResults<DB_Save_Image> results=mRealm.where(DB_Save_Image.class)
+                .equalTo("address",address).findAll();
         for(int i=0;i<results.size();i++){
             DB_Save_Image db_save_image=results.get(i);
             image.add(db_save_image.getImage());

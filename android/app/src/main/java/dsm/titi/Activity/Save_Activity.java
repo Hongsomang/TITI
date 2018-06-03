@@ -42,6 +42,7 @@ import dsm.titi.Manifest;
 import dsm.titi.R;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 import static com.gun0912.tedpicker.ImagePickerActivity.EXTRA_IMAGE_URIS;
 
@@ -92,6 +93,12 @@ public class Save_Activity extends AppCompatActivity {
 
         madapter=new Adapter_save(mItem,getApplicationContext());
         recyclerView.setAdapter(madapter);
+
+        if(getIntent().getExtras()!=null){
+            modify();
+
+
+        }
        /* mItem.add(new Item_save(R.drawable.splash_background));
         mItem.add(new Item_save(R.drawable.test));
         mItem.add(new Item_save(R.drawable.test2));
@@ -100,7 +107,13 @@ public class Save_Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Realm.init(Save_Activity.this);
-                save();
+                if(getIntent().getExtras()!=null){
+                    upate_save();
+                }
+                else{
+                    save();
+
+                }
             }
         });
 
@@ -230,6 +243,68 @@ public class Save_Activity extends AppCompatActivity {
         mNow = System.currentTimeMillis();
         mDate = new Date(mNow);
         return mFormat.format(mDate);
+
+
+    }
+    public void modify(){
+        Intent intent=getIntent();
+        String title=intent.getStringExtra("title");
+        String content=intent.getStringExtra("content");
+        String address=intent.getStringExtra("address");
+        String[] list=intent.getStringArrayExtra("list");
+        if(title.equals("")){
+
+        }
+        else{
+            title_et.setText(title);
+            address_et.setText(address);
+            content_et.setText(content);
+
+            for(int i=0;i<list.length;i++){
+                mItem.add(new Item_Save_Image(list[i]));
+                madapter.notifyDataSetChanged();
+
+            }
+
+        }
+
+
+    }
+    public void upate_save(){
+       final String title=title_et.getText().toString();
+       final String address=address_et.getText().toString();
+       final String content=content_et.getText().toString();
+        Realm();
+
+        Intent intent=getIntent();
+
+        RealmResults<DB_Save_Image> results=mRealm.where(DB_Save_Image.class)
+                .equalTo("address",intent.getStringExtra("address")).findAll();
+        results.deleteAllFromRealm() ;
+        Log.d("results:",String.valueOf(results.size()));
+        RealmResults<DB_Save> results2=mRealm.where(DB_Save.class)
+                .equalTo("address",intent.getStringExtra("address")).findAll();
+        results2.deleteAllFromRealm();
+        Log.d("results2:",String.valueOf(results2.size()));
+        mRealm.commitTransaction();
+
+        mRealm.beginTransaction();
+        DB_Save db_save=mRealm.createObject(DB_Save.class);
+        db_save.setTitle(title);
+        db_save.setContent(content);
+        db_save.setDate(getTime());
+        db_save.setAddress(address);
+
+        for(int i=0;i<mItem.size();i++){
+            DB_Save_Image db_save_image=mRealm.createObject(DB_Save_Image.class);
+            db_save_image.setTitle(title);
+            db_save_image.setImage(mItem.get(i).getImage());
+            db_save_image.setAddress(address);
+        }
+        mRealm.commitTransaction();
+
+        Toast.makeText(getApplicationContext(),"수정",Toast.LENGTH_LONG).show();
+
 
 
     }

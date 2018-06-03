@@ -60,16 +60,17 @@ public class ImagesAcitivity extends AppCompatActivity {
         title.setText(intent.getStringExtra("title"));
         address=intent.getStringExtra("address");
         Realm();
-        mItem.clear();
         RealmResults<DB_Save_Image> results=mRealm.where(DB_Save_Image.class).equalTo("address",address).findAll();
         if(results.size()!=0){
+            mItem.clear();
             for(int i=0;i<results.size();i++){
                 DB_Save_Image db_save_image=results.get(i);
                 mItem.add(new Item_Save_Image(db_save_image.getImage()));
+                mAdapter.notifyDataSetChanged();
 
             }
+
         }
-        mAdapter.notifyDataSetChanged();
 
 
         final GestureDetector gestureDetector = new GestureDetector(getApplicationContext(),new GestureDetector.SimpleOnGestureListener()

@@ -17,12 +17,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import dsm.titi.Activity.DB.DB_Save;
+import dsm.titi.Activity.DB.DB_Save_Image;
+import dsm.titi.Activity.Item.Item_Save_Image;
 import dsm.titi.Activity.Save_Activity;
 import dsm.titi.R;
 import io.realm.Realm;
@@ -39,6 +43,9 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback{
     private GoogleMap mMap;
     private Geocoder geocoder;
     private Realm mRealm;
+    private String Adress;
+    private String title;
+    private String[] array;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,34 +118,15 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback{
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-//        LatLng SEOUL = new LatLng(37.56, 126.97);
-//
-//        MarkerOptions markerOptions = new MarkerOptions();
-//
-//        markerOptions.position(SEOUL);
-//
-//        markerOptions.title("서울");
-//
-//        markerOptions.snippet("수도");
-//
-//        googleMap.addMarker(markerOptions);
-//
-//        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL))
-//
-//        ;
-//
-//        googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
-
-
         mMap=googleMap;
         geocoder=new Geocoder(getContext());
-
         Realm();
         RealmResults<DB_Save> results=mRealm.where(DB_Save.class).findAll();
         if(results.size()!=0){
             for(int i=0;i<results.size();i++){
                 DB_Save db_save=results.get(i);
-                String Adress=db_save.getAddress();
+                Adress=db_save.getAddress();
+                title=db_save.getTitle();
                 List<Address>addressList=null;
 
                 try {
@@ -156,19 +144,48 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback{
                 Log.d("longitude",longitude);
                 LatLng point=new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude));
                 MarkerOptions mOption=new MarkerOptions();
-                mOption.title(db_save.getTitle());
+                mOption.title(title);
                 mOption.snippet(address_maker);
                 mOption.position(point);
                 mMap.addMarker(mOption);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point,15));
+
             }
         }
 
-
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if(marker.getTitle().equals(title)){
+                      intent_data(Adress);
+                }
+                return true;
+            }
+        });
 
 
 
     }
+    public void intent_data(String address){
+        Realm();
+        DB_Save db_save=mRealm.where(DB_Save.class).equalTo("address",address).findFirst();
+        RealmResults<DB_Save_Image> results=mRealm.where(DB_Save_Image.class)
+                .equalTo("address",address).findAll();
+        array=new String[results.size()];
+        for(int i=0;i<results.size();i++){
+           DB_Save_Image db_save_image=results.get(i);
+           array[i]=db_save_image.getImage();
+        }
+
+
+        Intent intent=new Intent(getContext(),Save_Activity.class);
+        intent.putExtra("title",db_save.getTitle());
+        intent.putExtra("content",db_save.getContent());
+        intent.putExtra("address",db_save.getAddress());
+        intent.putExtra("list",array);
+        startActivity(intent);
+    }
+
     public void Realm(){
 
         try {
