@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +41,7 @@ public class Fragment_Album extends Fragment{
     private Item_Album item_album;
     private Realm mRealm;
     private String address,title;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
@@ -55,6 +57,22 @@ public class Fragment_Album extends Fragment{
         adapter=new Adapter_Album(getContext(),mItem);
         recyclerView.setAdapter(adapter);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mItem.clear();
+                Realm();
+                RealmResults<DB_Save_Image> results=mRealm.where(DB_Save_Image.class).findAll();
+                for(int i=0;i<results.size();i++){
+                    DB_Save_Image db_save_image=results.get(i);
+                    mItem.add(new Item_Album(db_save_image.getImage(),db_save_image.getTitle(),
+                            db_save_image.getAddress()));
+
+                }
+                adapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         final GestureDetector gestureDetector = new GestureDetector(getContext(),new GestureDetector.SimpleOnGestureListener()
         {
             @Override
