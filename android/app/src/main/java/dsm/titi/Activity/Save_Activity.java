@@ -159,6 +159,8 @@ public class Save_Activity extends AppCompatActivity {
         }else {
            // db.Realm();
             Realm();
+            mRealm.beginTransaction();
+
             DB_Save db_save=mRealm.createObject(DB_Save.class);
             db_save.setTitle(title);
             db_save.setContent(content);
@@ -240,7 +242,6 @@ public class Save_Activity extends AppCompatActivity {
                     .build();
             mRealm=Realm.getInstance(config);
         }
-        mRealm.beginTransaction();
     }
 
     public String getTime(){
@@ -279,7 +280,7 @@ public class Save_Activity extends AppCompatActivity {
        final String address=address_et.getText().toString();
        final String content=content_et.getText().toString();
         Realm();
-
+        mRealm.beginTransaction();
         Intent intent=getIntent();
 
         RealmResults<DB_Save_Image> results=mRealm.where(DB_Save_Image.class)

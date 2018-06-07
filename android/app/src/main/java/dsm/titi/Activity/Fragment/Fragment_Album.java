@@ -62,11 +62,12 @@ public class Fragment_Album extends Fragment{
             public void onRefresh() {
                 mItem.clear();
                 Realm();
-                RealmResults<DB_Save_Image> results=mRealm.where(DB_Save_Image.class).findAll();
+                RealmResults<DB_Save> results=mRealm.where(DB_Save.class).findAll();
                 for(int i=0;i<results.size();i++){
-                    DB_Save_Image db_save_image=results.get(i);
-                    mItem.add(new Item_Album(db_save_image.getImage(),db_save_image.getTitle(),
-                            db_save_image.getAddress()));
+                    DB_Save db_save=results.get(i);
+                    DB_Save_Image db_save_image=mRealm.where(DB_Save_Image.class)
+                            .equalTo("address",db_save.getAddress()).findFirst();
+                    mItem.add(new Item_Album(db_save_image.getImage(),db_save_image.getTitle(),db_save_image.getAddress()));
 
                 }
                 adapter.notifyDataSetChanged();

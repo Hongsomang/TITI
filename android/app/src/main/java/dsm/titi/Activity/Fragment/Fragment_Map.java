@@ -120,7 +120,8 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback{
     public void onMapReady(GoogleMap googleMap) {
         mMap=googleMap;
         geocoder=new Geocoder(getContext());
-        Realm();
+       Realm();
+       // mRealm= Realm.getDefaultInstance();
         RealmResults<DB_Save> results=mRealm.where(DB_Save.class).findAll();
         if(results.size()!=0){
             for(int i=0;i<results.size();i++){
